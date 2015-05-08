@@ -3,7 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('lodash');
-var glob = require('glob');
+var glob = require('glob-all');
 var parseImports = require('./parse-imports');
 
 // resolve a sass module to a path
@@ -149,4 +149,13 @@ module.exports.parseDir = function(dirpath, options) {
     return graph;
   }
   // throws
+};
+
+module.exports.parseGlob = function(pattern, options) {
+	options = processOptions(options);
+	var graph = new Graph(options);
+	_.each(glob.sync(pattern), function(dirpath) {
+		graph.addFile(path.resolve(dirpath));
+	});
+	return graph;
 };
